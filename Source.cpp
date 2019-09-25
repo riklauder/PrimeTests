@@ -1,4 +1,6 @@
-/*c++ test primatlity tests*/
+/*c++ test primatlity tests
+Only 3 working so far
+basic, miller-rabbin, c++ 17 other*/
 #include <iostream>
 #include <limits>
 #include <random>
@@ -27,6 +29,7 @@
 #define START_TIMER
 #define STOP_TIMER(name)
 #endif
+
 
 // Utility function to do modular exponentiation. 
 // It returns (x^y) % p 
@@ -220,6 +223,48 @@ bool solovoyStrassen(unsigned long long p, int iterations) {
     return true; 
 } 
 
+// function to calculate the coefficients 
+// of (x - 1)^n - (x^n - 1) with the help 
+// of Pascal's triangle . 
+void coef(unsigned long long n,  std::vector< long long>& c) 
+{ 
+    c[0]=1; 
+    for (long long i = 0; i < n; c[0] = -c[0], i++) { 
+        c[1 + i] = 1; 
+  
+        for ( long long  j = i; j > 0; j--) 
+            c[j] = c[j - 1] - c[j]; 
+    } 
+} 
+  
+// function to check whether 
+// the number is prime or not 
+bool AKSPrime(unsigned long long n,  std::vector< long long>& c) 
+{ 
+    // Calculating all the coefficients by 
+    // the function coef and storing all 
+    // the coefficients in c array . 
+    coef(n, c); 
+  
+    // subtracting c[n] and adding c[0] by 1 
+    // as ( x - 1 )^n - ( x^n - 1), here we 
+    // are subtracting c[n] by 1 and adding 
+    // 1 in expression. 
+    c[0]++, c[(long long)n]--; 
+  
+    // checking all the coefficients whether 
+    // they are divisible by n or not. 
+    // if n is not prime, then loop breaks 
+    // and (i > 0). 
+    long long i = n; 
+    while (i-- && c[i] % n == 0) 
+        ; 
+  
+    // Return true if all coefficients are 
+    // divisible by n. 
+    return i < 0; 
+} 
+
 void getResult(bool x) {
 	if (x) {
 		std::cout << "test successful - number IS PRIME!!" << std::endl;
@@ -233,8 +278,10 @@ void getResult(bool x) {
 
 int main() {
 
-	/*precision value*/
-	int k = 10000000;
+	/*precision values*/
+	int k = 13;
+    std::vector< long long> c;
+	
 	INIT_TIMER
 	unsigned long long number;
 	std::cout << "Enter a long long int for primtality testing: ";
@@ -256,11 +303,6 @@ int main() {
 	START_TIMER
 	getResult(c17Prime(number));
 	STOP_TIMER (" for cpp modern isPrime " )
-	std::cout << std::endl;
-
-	START_TIMER
-	getResult(solovoyStrassen(number, 50));
-	STOP_TIMER (" for Solovay-Strassen isPrime " )
 	std::cout << std::endl;
 
 
