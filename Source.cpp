@@ -137,12 +137,94 @@ bool bisprime(unsigned long long n) {
 	return k;
 }
 
+/*Modulo used for Solovay-Strassen*/
+unsigned long long modulo(unsigned long long base, unsigned long long exponent, unsigned long long mod) { 
+    unsigned long long x = 1; 
+    unsigned long long y = base; 
+    while (exponent > 0) 
+    { 
+        if (exponent % 2 == 1) 
+            x = (x * y) % mod; 
+  
+        y = (y * y) % mod; 
+        exponent = exponent / 2; 
+    } 
+  
+    return x % mod; 
+} 
+
+/* To calculate Jacobian symbol of a given number */
+unsigned long long calculateJacobian(unsigned long long a, unsigned long long n){ 
+    if (!a) 
+        return 0;// (0/n) = 0 
+
+    int ans = 1; 
+    if (a < 0) 
+    { 
+        a = -a; // (a/n) = (-a/n)*(-1/n) 
+        if (n % 4 == 3) 
+            ans = -ans; // (-1/n) = -1 if n = 3 (mod 4) 
+    } 
+  
+    if (a == 1) 
+        return ans;// (1/n) = 1 
+  
+    while (a) { 
+        if (a < 0) 
+        { 
+            a = -a;// (a/n) = (-a/n)*(-1/n) 
+            if (n % 4 == 3) 
+                ans = -ans;// (-1/n) = -1 if n = 3 (mod 4) 
+        } 
+  
+        while (a % 2 == 0){ 
+            a = a / 2; 
+            if (n % 8 == 3 || n % 8 == 5) 
+                ans = -ans; 
+  
+        } 
+  
+        std::swap(a, n); 
+  
+        if (a % 4 == 3 && n % 4 == 3) 
+            ans = -ans; 
+        a = a % n; 
+  
+        if (a > n / 2) 
+            a = a - n; 
+  
+    } 
+  
+    if (n == 1) 
+        return ans; 
+  
+    return 0; 
+} 
+
+/*Solovay-Strassen*/
+bool solovoyStrassen(unsigned long long p, int iterations) { 
+    if (p < 2) 
+        return false; 
+    if (p != 2 && p % 2 == 0) 
+        return false; 
+  
+    for (int i = 0; i < iterations; i++){ 
+        // Generate a random number a 
+        unsigned long long a = rand() % (p - 1) + 1; 
+        unsigned long long jacobian = (p + calculateJacobian(a, p)) % p; 
+        unsigned long long mod = modulo(a, (p - 1) / 2, p); 
+  
+        if (!jacobian || mod != jacobian) 
+            return false; 
+    } 
+    return true; 
+} 
 
 void getResult(bool x) {
 	if (x) {
-		std::cout << "test successful - number is prime" << std::endl;
+		std::cout << "test successful - number IS PRIME!!" << std::endl;
 	} else {
-		std::cout << "test result: NOT prime OR unclear Miller-Rabbin" << std::endl;
+		std::cout << "test result: NOT prime OR if Miller|SolovoyStrassen maybe unclear?" << std::endl;
 
 	}
 	return;
@@ -151,7 +233,8 @@ void getResult(bool x) {
 
 int main() {
 
-	int k = 8;
+	/*precision value*/
+	int k = 10000000;
 	INIT_TIMER
 	unsigned long long number;
 	std::cout << "Enter a long long int for primtality testing: ";
@@ -173,6 +256,11 @@ int main() {
 	START_TIMER
 	getResult(c17Prime(number));
 	STOP_TIMER (" for cpp modern isPrime " )
+	std::cout << std::endl;
+
+	START_TIMER
+	getResult(solovoyStrassen(number, 50));
+	STOP_TIMER (" for Solovay-Strassen isPrime " )
 	std::cout << std::endl;
 
 
