@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/d/rikla/Repos/C++/PrimeTests/Source.cpp
+iostream
+-
+limits
+-
+random
+-
+numeric
+-
+string
+-
+cstring
+-
+cstdlib
+-
+iomanip
+-
+functional
+-
+algorithm
+-
+vector
+-
+iterator
+-
+chrono
+-
+

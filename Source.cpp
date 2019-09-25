@@ -32,7 +32,7 @@
 // It returns (x^y) % p 
 unsigned long long power(unsigned long long x, unsigned int y, long long p)
 {
-	long long res = 1;      // Initialize result 
+	unsigned long long res = 1;      // Initialize result 
 	x = x % p;  // Update x if it is more than or 
 				// equal to p 
 	while (y > 0)
@@ -53,14 +53,14 @@ unsigned long long power(unsigned long long x, unsigned int y, long long p)
 // probably prime. 
 // d is an odd number such that  d*2<sup>r</sup> = n-1 
 // for some r >= 1 
-bool miillerTest(unsigned long long d, unsigned long long n)
+bool miillerTest(unsigned long long& d, unsigned long long n)
 {
 	// Pick a random number in [2..n-2] 
 	// Corner cases make sure that n > 4 
 	unsigned long long a = 2 + rand() % (n - 4);
 
 	// Compute a^d % n 
-	long long x = power(a, d, n);
+	unsigned long long x = power(a, d, n);
 
 	if (x == 1 || x == n - 1)
 		return true;
@@ -142,7 +142,7 @@ void getResult(bool x) {
 	if (x) {
 		std::cout << "test successful - number is prime" << std::endl;
 	} else {
-		std::cout << "test fail or unclear - not prime?" << std::endl;
+		std::cout << "test result: NOT prime OR unclear Miller-Rabbin" << std::endl;
 
 	}
 	return;
@@ -151,7 +151,7 @@ void getResult(bool x) {
 
 int main() {
 
-	int k = 4;
+	int k = 8;
 	INIT_TIMER
 	unsigned long long number;
 	std::cout << "Enter a long long int for primtality testing: ";

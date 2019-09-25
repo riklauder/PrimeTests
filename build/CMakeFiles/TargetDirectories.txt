@@ -1,0 +1,3 @@
+/mnt/d/rikla/Repos/C++/PrimeTests/build/CMakeFiles/rebuild_cache.dir
+/mnt/d/rikla/Repos/C++/PrimeTests/build/CMakeFiles/PrimeTests.dir
+/mnt/d/rikla/Repos/C++/PrimeTests/build/CMakeFiles/edit_cache.dir
