@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/d/rikla/Repos/C++/PrimeTests
+CMAKE_SOURCE_DIR = /mnt/c/Users/rikla/Source/Repos/C++/PrimeTests
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/d/rikla/Repos/C++/PrimeTests/build
+CMAKE_BINARY_DIR = /mnt/c/Users/rikla/Source/Repos/C++/PrimeTests/build
 
 #=============================================================================
 # Target rules for target CMakeFiles/PrimeTests.dir
@@ -66,7 +66,7 @@ CMAKE_BINARY_DIR = /mnt/d/rikla/Repos/C++/PrimeTests/build
 CMakeFiles/PrimeTests.dir/all:
 	$(MAKE) -f CMakeFiles/PrimeTests.dir/build.make CMakeFiles/PrimeTests.dir/depend
 	$(MAKE) -f CMakeFiles/PrimeTests.dir/build.make CMakeFiles/PrimeTests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/d/rikla/Repos/C++/PrimeTests/build/CMakeFiles --progress-num=1,2 "Built target PrimeTests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/rikla/Source/Repos/C++/PrimeTests/build/CMakeFiles --progress-num=1,2 "Built target PrimeTests"
 .PHONY : CMakeFiles/PrimeTests.dir/all
 
 # Include target in all.
@@ -76,9 +76,9 @@ all: CMakeFiles/PrimeTests.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/PrimeTests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/d/rikla/Repos/C++/PrimeTests/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/rikla/Source/Repos/C++/PrimeTests/build/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/PrimeTests.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/d/rikla/Repos/C++/PrimeTests/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/rikla/Source/Repos/C++/PrimeTests/build/CMakeFiles 0
 .PHONY : CMakeFiles/PrimeTests.dir/rule
 
 # Convenience name for target.

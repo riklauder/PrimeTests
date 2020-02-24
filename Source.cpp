@@ -1,6 +1,9 @@
 /*c++ test primatlity tests
 Only 3 working so far
 basic, miller-rabbin, c++ 17 other*/
+#include <gmp.h>
+#include <cstdio>
+#include <cassert>
 #include <iostream>
 #include <limits>
 #include <random>
@@ -14,6 +17,8 @@ basic, miller-rabbin, c++ 17 other*/
 #include <vector>
 #include <iterator>
 #include <chrono>
+
+#include "BigInt.hpp"
 
 #define TIMING
 
@@ -33,9 +38,9 @@ basic, miller-rabbin, c++ 17 other*/
 
 // Utility function to do modular exponentiation. 
 // It returns (x^y) % p 
-unsigned long long power(unsigned long long x, unsigned int y, long long p)
+BigInt power(BigInt x, unsigned int y, BigInt p)
 {
-	unsigned long long res = 1;      // Initialize result 
+	BigInt res = 1;      // Initialize result 
 	x = x % p;  // Update x if it is more than or 
 				// equal to p 
 	while (y > 0)
@@ -56,14 +61,14 @@ unsigned long long power(unsigned long long x, unsigned int y, long long p)
 // probably prime. 
 // d is an odd number such that  d*2<sup>r</sup> = n-1 
 // for some r >= 1 
-bool miillerTest(unsigned long long& d, unsigned long long n)
+bool miillerTest(BigInt& d, BigInt n)
 {
 	// Pick a random number in [2..n-2] 
 	// Corner cases make sure that n > 4 
-	unsigned long long a = 2 + rand() % (n - 4);
+	BigInt a = 2 + rand() % (n - 4);
 
 	// Compute a^d % n 
-	unsigned long long x = power(a, d, n);
+	BigInt x = power(a, d.to_long_long(), n);
 
 	if (x == 1 || x == n - 1)
 		return true;
@@ -89,14 +94,14 @@ bool miillerTest(unsigned long long& d, unsigned long long n)
 // It returns false if n is composite and returns true if n 
 // is probably prime.  k is an input parameter that determines 
 // accuracy level. Higher value of k indicates more accuracy. 
-bool millerisPrime(unsigned long long n, int k)
+bool millerisPrime(BigInt n, int k)
 {
 	// Corner cases 
 	if (n <= 1 || n == 4)  return false;
 	if (n <= 3) return true;
 
 	// Find r such that n = 2^d * r + 1 for some r >= 1 
-	unsigned long long d = n - 1;
+	BigInt d = n - 1;
 	while (d % 2 == 0)
 		d /= 2;
 
@@ -108,16 +113,17 @@ bool millerisPrime(unsigned long long n, int k)
 	return true;
 }
 
-/*modernc++17 based found*/
-bool c17Prime(unsigned long long const n) {
-	if (n <= 3) return n > 1;
-	else if (n % 2 == 0 || n % 3 == 0) return false;
-	else
-	{
-		for (long long i = 4; i * i <= n; i += 6)
-		{
-			if (n % i == 0 || n % (i + 2) == 0)
-			{
+/*modernc++17 based found
+Seems to fail with number 3825123056546413051
+Thinks it's prime while other checkers do not*/
+bool c17Prime(BigInt n) {
+	if (n <= 3) 
+		return n > 1;
+	else if (n % 2 == 0 || n % 3 == 0) 
+		return false;
+	else {
+		for (unsigned long long i = 5; i * i <= n.to_long_long(); i += 6){
+			if (n % i == 0 || n % (i + 2) == 0){
 				return false;
 			}
 		}
@@ -127,10 +133,10 @@ bool c17Prime(unsigned long long const n) {
 
 /*basic validates if integer n is prime number
 returns true or false*/
-bool bisprime(unsigned long long n) {
+bool bisprime(BigInt n) {
 	bool k = true;
 	if (n != 2) {
-		for (int i = 2; i < (int)std::sqrt(n) + 1; i++) {
+		for (long long i = 2; i < sqrt(n.to_long_long()) + 1; i++) {
 			if (n % i == 0) {
 				k = false;
 				break;
@@ -226,10 +232,9 @@ bool solovoyStrassen(unsigned long long p, int iterations) {
 // function to calculate the coefficients 
 // of (x - 1)^n - (x^n - 1) with the help 
 // of Pascal's triangle . 
-void coef(unsigned long long n,  std::vector< long long>& c) 
-{ 
+void coef(BigInt n,  std::vector<BigInt>& c){ 
     c[0]=1; 
-    for (long long i = 0; i < n; c[0] = -c[0], i++) { 
+    for (long long i = 0; i < n.to_long_long(); c[0] = -c[0], i++) { 
         c[1 + i] = 1; 
   
         for ( long long  j = i; j > 0; j--) 
@@ -239,27 +244,23 @@ void coef(unsigned long long n,  std::vector< long long>& c)
   
 // function to check whether 
 // the number is prime or not 
-bool AKSPrime(unsigned long long n,  std::vector< long long>& c) 
-{ 
+bool AKSPrime(BigInt n,  std::vector<BigInt>& c) { 
     // Calculating all the coefficients by 
     // the function coef and storing all 
     // the coefficients in c array . 
     coef(n, c); 
-  
     // subtracting c[n] and adding c[0] by 1 
     // as ( x - 1 )^n - ( x^n - 1), here we 
     // are subtracting c[n] by 1 and adding 
     // 1 in expression. 
-    c[0]++, c[(long long)n]--; 
-  
+    c[0]++, c[n.to_long_long()]--; 
     // checking all the coefficients whether 
     // they are divisible by n or not. 
     // if n is not prime, then loop breaks 
     // and (i > 0). 
-    long long i = n; 
+    long long i = n.to_long_long(); 
     while (i-- && c[i] % n == 0) 
         ; 
-  
     // Return true if all coefficients are 
     // divisible by n. 
     return i < 0; 
@@ -267,7 +268,7 @@ bool AKSPrime(unsigned long long n,  std::vector< long long>& c)
 
 void getResult(bool x) {
 	if (x) {
-		std::cout << "test successful - number IS PRIME!!" << std::endl;
+		std::cout << "test result: IS PRIME!!" << std::endl;
 	} else {
 		std::cout << "test result: NOT prime OR if Miller|SolovoyStrassen maybe unclear?" << std::endl;
 
@@ -279,31 +280,51 @@ void getResult(bool x) {
 int main() {
 
 	/*precision values*/
-	int k = 13;
-    std::vector< long long> c;
+	int k = 8;
 	
 	INIT_TIMER
-	unsigned long long number;
+	//unsigned long long number;
+	BigInt number;
+	mpz_t n;
+	mpz_init(n);
+	char input[1024];
 	std::cout << "Enter a long long int for primtality testing: ";
-	std::cin >> number;
-
+	std::cin >> input;
+	//number = input.to_long_long();
+	number = input;
 	std::cout << std::endl;
 	std::cout << "Beginning primality testing for n = " << number << " ---" << std::endl;
-
-	START_TIMER
+	
+	/*START_TIMER
 	getResult(bisprime(number));
 	STOP_TIMER("for basic isprime ")
+	std::cout << std::endl;*/
+	mpz_set_ui(n, 0);
+	mpz_set_str(n, input, 10);
+
+	START_TIMER
+	getResult((bool)mpz_probab_prime_p(n, k));
+	STOP_TIMER( "for mpz gmp isPrime ")
 	std::cout << std::endl;
+
 
 	START_TIMER
 	getResult(millerisPrime(number, k));
 	STOP_TIMER( "for Miller-Rabbin isPrime ")
 	std::cout << std::endl;
 
-	START_TIMER
+	/*START_TIMER
 	getResult(c17Prime(number));
 	STOP_TIMER (" for cpp modern isPrime " )
 	std::cout << std::endl;
+	*/
 
+/*
+	START_TIMER
+	std::vector<BigInt> coefs(1000);
+	getResult(AKSPrime(number, coefs));
+	STOP_TIMER (" for AKSPrime " )
+	std::cout << std::endl;
+*/
 
 }

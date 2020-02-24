@@ -6,7 +6,27 @@
 
 #IncludeRegexTransform: 
 
-/mnt/d/rikla/Repos/C++/PrimeTests/Source.cpp
+/mnt/c/Users/rikla/Source/Repos/C++/PrimeTests/BigInt.hpp
+iostream
+-
+tuple
+-
+string
+-
+climits
+-
+cmath
+-
+string
+-
+
+/mnt/c/Users/rikla/Source/Repos/C++/PrimeTests/Source.cpp
+gmp.h
+-
+cstdio
+-
+cassert
+-
 iostream
 -
 limits
@@ -33,4 +53,6 @@ iterator
 -
 chrono
 -
+BigInt.hpp
+/mnt/c/Users/rikla/Source/Repos/C++/PrimeTests/BigInt.hpp
 
